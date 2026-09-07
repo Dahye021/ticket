@@ -8,6 +8,4 @@ public interface UserMapper {
 
     //이메일을 받아서 사용자 조회 후 유저 객체 반환
     Users findByEmail(String email);
-
-
 }

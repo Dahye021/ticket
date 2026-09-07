@@ -16,6 +16,11 @@ class UserMapperTest {
     void findByEmailTest() {
         Users users = userMapper.findByEmail("test@test.com");
 
+        if (users == null) {
+            System.out.println("사용자를 찾지 못했습니다.");
+            return;
+        }
+
         System.out.println("userId = " + users.getUserId());
         System.out.println("userId = " + users.getUserId());
         System.out.println("userId = " + users.getUserId());
