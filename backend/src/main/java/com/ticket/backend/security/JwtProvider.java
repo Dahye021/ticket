@@ -1,7 +1,6 @@
 package com.ticket.backend.security;
 
 import com.ticket.backend.domain.Users;
-import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
@@ -64,6 +63,28 @@ public class JwtProvider {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    //userId 꺼내기
+    public Long getUserId(String token) {
+        String subject = Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+
+        return Long.valueOf(subject);
+    }
+
+    //권한 체크
+    public String getRole(String token) {
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("role", String.class);
     }
 }
 

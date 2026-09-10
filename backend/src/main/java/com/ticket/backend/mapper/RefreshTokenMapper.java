@@ -8,4 +8,7 @@ public interface RefreshTokenMapper {
 
     //RefreshToken 객체를 받아서 DB에 저장 (xml 연결)
     void insertRefreshToken(RefreshTokens refreshTokens);
+
+    //토큰 조회
+    RefreshTokens findByRefreshToken(String refreshToken);
 }

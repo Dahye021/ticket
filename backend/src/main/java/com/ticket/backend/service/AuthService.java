@@ -2,6 +2,7 @@ package com.ticket.backend.service;
 
 import com.ticket.backend.domain.RefreshTokens;
 import com.ticket.backend.domain.Users;
+import com.ticket.backend.dto.auth.AccessTokenResponse;
 import com.ticket.backend.dto.auth.LoginRequest;
 import com.ticket.backend.dto.auth.LoginResponse;
 import com.ticket.backend.mapper.RefreshTokenMapper;
@@ -58,5 +59,36 @@ public class AuthService {
                 accessToken,
                 refreshToken
         );
+    }
+
+    //토큰 재발급 메서드
+    public AccessTokenResponse refresh(String refreshToken) {
+        RefreshTokens savedToken = refreshTokenMapper.findByRefreshToken(refreshToken);
+
+        //토큰 있는지 확인
+        if (savedToken == null) {
+            throw new IllegalArgumentException("유효하지 않은 Refresh Token입니다.");
+        }
+
+        //토큰 무효화 확인
+        if (savedToken.isRevoked()) {
+            throw new IllegalArgumentException("이미 무효화 된 Refresh Token입니다.");
+        }
+
+        //토큰 만료 확인
+        if (savedToken.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("만료 된 Refresh Token입니다.");
+        }
+
+        //
+        if (!jwtProvider.validateToken(refreshToken)) {
+            throw new IllegalArgumentException("유효하지 않은 Refresh Token입니다.");
+        }
+
+        Long userId = jwtProvider.getUserId(refreshToken);
+        Users users = userMapper.findById(userId);
+        String newAccessToken = jwtProvider.createAccessToken(users);
+
+        return new AccessTokenResponse(newAccessToken);
     }
 }

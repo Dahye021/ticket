@@ -7,18 +7,32 @@
 
     <insert id="insertRefreshToken">
         INSERT INTO refresh_tokens (
-            user_id,
-            refresh_token,
-            expires_at,
-            revoked,
-            created_at
+        user_id,
+        refresh_token,
+        expires_at,
+        revoked,
+        created_at
         )
         VALUES (
-            #{userId},
-            #{refreshToken},
-            #{expiresAt},
-            #{revoked},
-            #{createdAt}
+        #{userId},
+        #{refreshToken},
+        #{expiresAt},
+        #{revoked},
+        #{createdAt}
         )
     </insert>
+
+    <select id="findByRefreshToken"
+            parameterType="string"
+            resultType="com.ticket.backend.domain.RefreshTokens">
+        SELECT
+        refresh_token_id,
+        user_id,
+        refresh_token,
+        expires_at,
+        revoked,
+        created_at
+        FROM refresh_tokens
+        WHERE refresh_token = #{refreshToken}
+    </select>
 </mapper>

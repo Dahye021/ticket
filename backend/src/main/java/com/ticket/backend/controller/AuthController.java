@@ -1,7 +1,9 @@
 package com.ticket.backend.controller;
 
+import com.ticket.backend.dto.auth.AccessTokenResponse;
 import com.ticket.backend.dto.auth.LoginRequest;
 import com.ticket.backend.dto.auth.LoginResponse;
+import com.ticket.backend.dto.auth.RefreshRequest;
 import com.ticket.backend.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,16 @@ public class AuthController {
             @RequestBody LoginRequest request
             ) {
         LoginResponse response = authService.login(request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<AccessTokenResponse> refresh(
+            @RequestBody RefreshRequest request
+    ) {
+        AccessTokenResponse response =
+                authService.refresh(request.getRefreshToken());
 
         return ResponseEntity.ok(response);
     }
