@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper>
+
+    <!--주문 저장-->
+    <insert id="insertOrder">
+        INSERT INTO orders (
+        user_id,
+        ticket_id,
+        quantity,
+        price,
+        discount_amount,
+        final_amount,
+        order_stats,
+        ordered_at,
+        canceled_at
+        )
+        VALUES (
+        #{userId},
+        #{ticketId},
+        #{quantity},
+        #{price},
+        #{discountRate},
+        #{discountAmount},
+        #{finalAmount},
+        #{orderStatus},
+        #{orderedAt},
+        #{canceledAt}
+        )
+    </insert>
+
+    <select id="getPurchasedQuantity" resultType="int">
+        SELECT COALESCE(SUM(quantity), 0)
+        FROM orders
+        WHERE user_id = #{userId}
+        AND ticket_id = #{ticketId}
+        AND order_status = 'PURCHASED'
+    </select>
+</mapper>
