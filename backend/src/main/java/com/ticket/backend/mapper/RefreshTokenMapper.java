@@ -11,4 +11,7 @@ public interface RefreshTokenMapper {
 
     //토큰 조회
     RefreshTokens findByRefreshToken(String refreshToken);
+
+    //RefreshToken 무효화
+    int revokeRefreshToken(String refreshToken);
 }

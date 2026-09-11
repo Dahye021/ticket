@@ -31,3 +31,24 @@ insert into users(
          );
 
 select * from users;
+
+-- 토큰 테스트
+-- revoked = true 토큰
+UPDATE refresh_tokens
+SET revoked = TRUE
+WHERE refresh_token_id = 1;
+
+-- revoked 원복
+UPDATE refresh_tokens
+SET revoked = FALSE
+WHERE refresh_token_id = 1;
+
+-- 토큰 만료 테스트
+UPDATE refresh_tokens
+SET expires_at = '2020-01-01 00:00:00'
+WHERE refresh_token_id = 1;
+
+-- 로그아웃 후 만료 토큰 확인
+SELECT *
+FROM refresh_tokens
+WHERE revoked = TRUE;

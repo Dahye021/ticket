@@ -20,18 +20,20 @@ public class AuthService {
     private final JwtProvider jwtProvider;
     private final RefreshTokenMapper refreshTokenMapper;
 
-    //로그인
+    //로그인 처리
     public LoginResponse login(LoginRequest request) {
+
+        //이메일로 사용자 조회
         Users users = userMapper.findByEmail(request.getEmail());
 
-        //이메일 확인
+        //사용자가 존재하는지 확인
         if (users == null) {
             throw new IllegalArgumentException(
                     "존재하지 않는 사용자 입니다."
             );
         }
 
-        //비밀번호 확인
+        //비밀번호가 일치하는지 확인
         if (!users.getPassword().equals(request.getPassword())) {
             throw new IllegalArgumentException(
                     "이메일 또는 비밀번호가 올바르지 않습니다."
@@ -45,6 +47,7 @@ public class AuthService {
         String refreshToken =
                 jwtProvider.createRefreshToken(users);
 
+        //RefreshToken 정보를 DB에 저장
         RefreshTokens tokens = new RefreshTokens();
 
         tokens.setUserId(users.getUserId());
@@ -65,7 +68,7 @@ public class AuthService {
     public AccessTokenResponse refresh(String refreshToken) {
         RefreshTokens savedToken = refreshTokenMapper.findByRefreshToken(refreshToken);
 
-        //토큰 있는지 확인
+        //토큰이 존재 하는지 DB 조회
         if (savedToken == null) {
             throw new IllegalArgumentException("유효하지 않은 Refresh Token입니다.");
         }
@@ -80,7 +83,7 @@ public class AuthService {
             throw new IllegalArgumentException("만료 된 Refresh Token입니다.");
         }
 
-        //
+        //JWT 토큰 자체가 유효한지 확인
         if (!jwtProvider.validateToken(refreshToken)) {
             throw new IllegalArgumentException("유효하지 않은 Refresh Token입니다.");
         }
@@ -90,5 +93,16 @@ public class AuthService {
         String newAccessToken = jwtProvider.createAccessToken(users);
 
         return new AccessTokenResponse(newAccessToken);
+    }
+
+    //로그아웃 메서드
+    public void logout(String refreshToken) {
+
+        //토큰 무효화
+        int result = refreshTokenMapper.revokeRefreshToken(refreshToken);
+
+        if (result == 0) {
+            throw new IllegalArgumentException("유효하지 않은 Refresh Token입니다.");
+        }
     }
 }

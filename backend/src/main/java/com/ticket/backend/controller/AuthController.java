@@ -1,9 +1,6 @@
 package com.ticket.backend.controller;
 
-import com.ticket.backend.dto.auth.AccessTokenResponse;
-import com.ticket.backend.dto.auth.LoginRequest;
-import com.ticket.backend.dto.auth.LoginResponse;
-import com.ticket.backend.dto.auth.RefreshRequest;
+import com.ticket.backend.dto.auth.*;
 import com.ticket.backend.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +16,7 @@ public class AuthController {
 
     private final AuthService authService;
 
+    //로그인 API
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(
             @RequestBody LoginRequest request
@@ -28,6 +26,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    //토큰 API
     @PostMapping("/refresh")
     public ResponseEntity<AccessTokenResponse> refresh(
             @RequestBody RefreshRequest request
@@ -36,5 +35,15 @@ public class AuthController {
                 authService.refresh(request.getRefreshToken());
 
         return ResponseEntity.ok(response);
+    }
+
+    //로그아웃 API
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(
+            @RequestBody LogoutRequest request
+    ) {
+        authService.logout(request.getRefreshToken());
+
+        return ResponseEntity.ok().build();
     }
 }
