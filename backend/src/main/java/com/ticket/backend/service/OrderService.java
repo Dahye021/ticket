@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -78,5 +79,10 @@ public class OrderService {
 
         //주문을 orders에 저장
         orderMapper.insertOrder(orders);
+    }
+
+    //주문 조회
+    public List<Orders> getMyOrders(Long userId) {
+        return orderMapper.findByUserId(userId);
     }
 }

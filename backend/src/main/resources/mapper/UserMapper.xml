@@ -5,9 +5,7 @@
 
 <mapper namespace="com.ticket.backend.mapper.UserMapper">
 
-    <select id="findById"
-            parameterType="long"
-            resultType="com.ticket.backend.domain.Users">
+    <select id="findById" parameterType="long" resultType="com.ticket.backend.domain.Users">
         SELECT
         user_id,
         email,
@@ -19,16 +17,14 @@
         WHERE user_id = #{userId}
     </select>
 
-    <select id="findByEmail"
-            parameterType="string"
-            resultType="com.ticket.backend.domain.Users">
+    <select id="findByEmail" parameterType="string" resultType="com.ticket.backend.domain.Users">
         SELECT
         user_id,
         email,
         password,
         name,
         phone,
-        'role'
+        role
         FROM users
         WHERE email = #{email}
     </select>

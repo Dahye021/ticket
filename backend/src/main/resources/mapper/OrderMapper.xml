@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper>
+<mapper namespace="com.ticket.backend.mapper.OrderMapper">
 
     <!--주문 저장-->
     <insert id="insertOrder">
@@ -12,9 +12,10 @@
         ticket_id,
         quantity,
         price,
+        discount_rate,
         discount_amount,
         final_amount,
-        order_stats,
+        order_status,
         ordered_at,
         canceled_at
         )
@@ -32,11 +33,31 @@
         )
     </insert>
 
+    <!--티켓 구매 수량 조회-->
     <select id="getPurchasedQuantity" resultType="int">
         SELECT COALESCE(SUM(quantity), 0)
         FROM orders
         WHERE user_id = #{userId}
         AND ticket_id = #{ticketId}
         AND order_status = 'PURCHASED'
+    </select>
+
+    <!--주문 목록 조회-->
+    <select id="findByUserId" resultType="com.ticket.backend.domain.Orders">
+        SELECT
+        order_id,
+        user_id,
+        ticket_id,
+        quantity,
+        price,
+        discount_rate,
+        discount_amount,
+        final_amount,
+        order_status,
+        ordered_at,
+        canceled_at
+        FROM orders
+        WHERE user_id = #{userId}
+        ORDER BY order_id DESC
     </select>
 </mapper>

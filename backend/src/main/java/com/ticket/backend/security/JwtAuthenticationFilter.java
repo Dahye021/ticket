@@ -32,9 +32,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (jwtProvider.validateToken(token)) {
 
+                //에러 찾기용 임시 출력문(지울것)
+                System.out.println("받은 토큰 = " + token);
+                System.out.println("토큰 유효 = " + jwtProvider.validateToken(token));
+
                 //userid 랑 role 가져오기
                 Long userId = jwtProvider.getUserId(token);
                 String role = jwtProvider.getRole(token);
+
+                //테스트 (지울것)
+                System.out.println("userId = " + userId);
+                System.out.println("role = " + role);
 
                 SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role);
 
@@ -46,8 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         );
 
                 //인증된 사용자의 요청을 Spring Security에 등록
-                SecurityContextHolder.getContext()
-                        .setAuthentication(authentication);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
         filterChain.doFilter(request, response);

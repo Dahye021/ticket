@@ -132,3 +132,17 @@ WHERE refresh_token_id = 1;
 SELECT *
 FROM refresh_tokens
 WHERE revoked = TRUE;
+
+-- 티켓 주문 후 주문 확인
+SELECT *
+FROM orders
+ORDER BY order_id DESC;
+
+-- 티켓 주문 후 재고 확인
+SELECT
+    ticket_id,
+    ticket_name,
+    total_quantity,
+    remaining_quantity
+FROM tickets
+WHERE ticket_id = 1;

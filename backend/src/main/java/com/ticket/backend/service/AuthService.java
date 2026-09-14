@@ -26,6 +26,9 @@ public class AuthService {
         //이메일로 사용자 조회
         Users users = userMapper.findByEmail(request.getEmail());
 
+        //임시 테스트(지울것)
+        System.out.println("DB에서 조회한 role = " + users.getRole());
+
         //사용자가 존재하는지 확인
         if (users == null) {
             throw new IllegalArgumentException(

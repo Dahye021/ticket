@@ -43,7 +43,7 @@
     </select>
 
     <!--조건부 업데이트-->
-    <update id="decreaseStick">
+    <update id="decreaseStock">
         UPDATE tickets
         SET remaining_quantity = remaining_quantity - #{quantity}
         WHERE ticket_id = #{ticketId}

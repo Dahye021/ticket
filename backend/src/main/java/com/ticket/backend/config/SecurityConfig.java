@@ -24,7 +24,9 @@ public class SecurityConfig {
                                 "/api/auth/refresh",
                                 "/api/auth/logout",
                                 "/api/auth/tickets"
-                        ).permitAll().anyRequest().authenticated()
+                        ).permitAll()
+                        .requestMatchers("/api/tickets/**").authenticated()
+                        .anyRequest().authenticated()
                 )
 
                 .addFilterBefore(

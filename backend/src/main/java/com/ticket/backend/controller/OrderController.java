@@ -3,16 +3,17 @@ package com.ticket.backend.controller;
 import com.ticket.backend.dto.order.OrderRequest;
 import com.ticket.backend.service.OrderService;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/tickets")
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
 
+    //티켓 구매
     @PostMapping("/{ticketId}/orders")
     public ResponseEntity<String> purchase(
             @PathVariable Long ticketId,
@@ -21,5 +22,12 @@ public class OrderController {
     ) {
         Long userId = (Long) authentication.getPrincipal();
 
+        orderService.purchase(
+                userId,
+                ticketId,
+                request.getQuantity()
+        );
+
+        return ResponseEntity.ok("티켓 구매가 완료되었습니다.");
     }
 }
