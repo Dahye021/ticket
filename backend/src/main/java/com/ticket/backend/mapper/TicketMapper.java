@@ -12,8 +12,14 @@ public interface TicketMapper {
     List<Tickets> findAll();                                    //전체 티켓 조회
     Tickets findById(Long ticketId);                            //티켓 상세 조회
 
-    //티켓 재고 차감 (파라미터 두개여서 @Parram 사용)
+    //티켓 재고 차감
     int decreaseStock(
+            @Param("ticketId") Long ticketId,
+            @Param("quantity") Integer quantity
+    );
+
+    //티켓 취소 시 재고 복구
+    int increaseStock(
             @Param("ticketId") Long ticketId,
             @Param("quantity") Integer quantity
     );

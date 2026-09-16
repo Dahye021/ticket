@@ -85,4 +85,29 @@ public class OrderService {
     public List<Orders> getMyOrders(Long userId) {
         return orderMapper.findByUserId(userId);
     }
+
+    //주문 취소
+    @Transactional
+    public void cancel(Long userId, Long orderId) {
+
+        //주문 본인 주문인지 확인
+        Orders orders = orderMapper.findByOrderId(orderId, userId);
+
+        if (orders == null) {
+            throw new IllegalArgumentException("주문을 찾을 수 없습니다.");
+        }
+
+        //주문 상태 변경
+        int result = orderMapper.cancelOrder(orderId, userId);
+
+        if (result == 0) {
+            throw new IllegalArgumentException("이미 취소된 주문입니다.");
+        }
+
+        //티켓 재고 복구
+        ticketMapper.increaseStock(
+                orders.getTicketId(),
+                orders.getQuantity()
+        );
+    }
 }

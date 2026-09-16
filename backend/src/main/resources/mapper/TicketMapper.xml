@@ -49,4 +49,11 @@
         WHERE ticket_id = #{ticketId}
         AND remaining_quantity >= #{quantity}
     </update>
+
+    <!--티켓 재고 복구-->
+    <update id="increaseStock">
+        UPDATE tickets
+        SET remaining_quantity = remaining_quantity + #{quantity}
+        WHERE ticket_id = #{ticketId}
+    </update>
 </mapper>

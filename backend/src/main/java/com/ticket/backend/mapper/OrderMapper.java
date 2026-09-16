@@ -18,5 +18,19 @@ public interface OrderMapper {
     );
 
     //사용자 주문 목록 조회
-    List<Orders> findByUserId(@Param("userId") Long userId);
+    List<Orders> findByUserId(
+            @Param("userId") Long userId
+    );
+
+    //주문 상세 조회
+    Orders findByOrderId(
+            @Param("orderId") Long orderId,
+            @Param("userId") Long userId
+    );
+
+    //주문 취소
+    int cancelOrder(
+      @Param("orderId") Long orderId,
+      @Param("userId") Long userId
+    );
 }

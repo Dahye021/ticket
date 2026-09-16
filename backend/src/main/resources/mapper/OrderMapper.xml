@@ -60,4 +60,33 @@
         WHERE user_id = #{userId}
         ORDER BY order_id DESC
     </select>
+
+    <!--주문 상세 조회-->
+    <select id="findByOrderId" resultType="com.ticket.backend.domain.Orders">
+        SELECT
+        order_id,
+        user_id,
+        ticket_id,
+        quantity,
+        price,
+        discount_rate,
+        discount_amount,
+        final_amount,
+        order_status,
+        ordered_at,
+        canceled_at
+        FROM orders
+        WHERE order_id = #{orderId}
+        AND user_id = #{userId}
+    </select>
+
+    <!--주문 취소-->
+    <update id="cancelOrder">
+        UPDATE orders
+        SET order_status = 'CANCELED',
+        canceled_at = NOW()
+        WHERE order_id = #{orderId}
+        AND user_id = #{userId}
+        AND order_status = 'PURCHASED'
+    </update>
 </mapper>
