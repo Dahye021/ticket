@@ -207,3 +207,41 @@ SELECT
 FROM tickets
 WHERE ticket_name = '동시성 테스트 티켓'
 ORDER BY ticket_id DESC;
+
+-- 테스트 전 티켓 확인
+SELECT ticket_id, remaining_quantity, purchase_limit
+FROM tickets
+WHERE ticket_id = 6;
+
+-- 테스트 후 주문 확인
+SELECT
+    COUNT(*) AS order_count,
+    COALESCE(SUM(quantity), 0) AS sold_quantity
+FROM orders
+WHERE ticket_id = 6
+  AND order_status = 'PURCHASED';
+
+SELECT *
+FROM orders
+WHERE order_id = 4;
+
+-- 테스트 후 주문 상태 결과
+SELECT
+    order_id,
+    user_id,
+    ticket_id,
+    quantity,
+    order_status,
+    canceled_at
+FROM orders
+WHERE order_id = 4;
+
+-- 재고 복구 확인
+SELECT
+    order_id,
+    user_id,
+    quantity,
+    order_status,
+    canceled_at
+FROM orders
+WHERE order_id = 4;
