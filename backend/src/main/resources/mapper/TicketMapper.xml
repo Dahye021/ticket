@@ -42,7 +42,7 @@
         WHERE ticket_id = #{ticketId}
     </select>
 
-    <!--조건부 업데이트-->
+    <!--티켓 재고 차감 (조건부 업데이트)-->
     <update id="decreaseStock">
         UPDATE tickets
         SET remaining_quantity = remaining_quantity - #{quantity}

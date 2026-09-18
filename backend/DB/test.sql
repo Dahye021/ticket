@@ -112,6 +112,36 @@ INSERT INTO tickets (
           20
       );
 
+-- 동시성 제어 테스트 전용 티켓 목데이터
+INSERT INTO tickets (
+    ticket_name,
+    venue,
+    sale_start_at,
+    sale_end_at,
+    valid_start_at,
+    valid_end_at,
+    total_quantity,
+    remaining_quantity,
+    purchase_limit,
+    price,
+    discount_rate
+)
+VALUES (
+           '동시성 테스트 티켓',
+           '테스트 장소',
+           NOW() - INTERVAL 1 DAY,
+           NOW() + INTERVAL 1 DAY,
+           NOW() + INTERVAL 2 DAY,
+           NOW() + INTERVAL 3 DAY,
+           10,
+           10,
+           NULL,
+           10000,
+           0
+       );
+
+
+
 -- 토큰 테스트
 -- revoked = true 토큰
 UPDATE refresh_tokens
@@ -133,6 +163,9 @@ SELECT *
 FROM refresh_tokens
 WHERE revoked = TRUE;
 
+
+
+-- 티켓 or 주문 테스트
 -- 티켓 주문 후 주문 확인
 SELECT *
 FROM orders
@@ -146,3 +179,31 @@ SELECT
     remaining_quantity
 FROM tickets
 WHERE ticket_id = 1;
+
+-- 티켓 취소 확인
+SELECT
+    order_id,
+    user_id,
+    order_status,
+    canceled_at
+FROM orders
+ORDER BY order_id DESC;
+
+-- 티켓 취소 후 재고 확인
+SELECT ticket_id, remaining_quantity
+FROM tickets
+WHERE ticket_id = 1;
+
+
+
+-- 동시성 제어 테스트
+-- 티켓 번호 확인
+SELECT
+    ticket_id,
+    ticket_name,
+    total_quantity,
+    remaining_quantity,
+    purchase_limit
+FROM tickets
+WHERE ticket_name = '동시성 테스트 티켓'
+ORDER BY ticket_id DESC;

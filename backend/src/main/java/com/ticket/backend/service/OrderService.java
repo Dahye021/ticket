@@ -5,6 +5,7 @@ import com.ticket.backend.domain.Tickets;
 import com.ticket.backend.mapper.OrderMapper;
 import com.ticket.backend.mapper.TicketMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,13 +78,22 @@ public class OrderService {
         orders.setOrderedAt(now);
         orders.setCanceledAt(null);
 
-        //주문을 orders에 저장
         orderMapper.insertOrder(orders);
     }
 
-    //주문 조회
+    //주문 목록 조회
     public List<Orders> getMyOrders(Long userId) {
         return orderMapper.findByUserId(userId);
+    }
+
+    //주문 상세 조회
+    public Orders getOrder(Long userId, Long orderId) {
+        Orders orders = orderMapper.findByOrderId(orderId, userId);
+
+        if (orders == null) {
+            throw new IllegalArgumentException("주문을 찾울 수 없습니다.");
+        }
+        return orders;
     }
 
     //주문 취소
