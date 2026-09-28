@@ -41,13 +41,23 @@ public class OrderService {
             throw new IllegalArgumentException("현재 판매 중인 티켓이 아닙니다.");
         }
 
-        //금액 계산
+//        //금액 계산
         long price = tickets.getPrice();
         int discountRate = tickets.getDiscountRate() == null ? 0 : tickets.getDiscountRate();
 
         long originalAmount = price * quantity;
         long discountAmount = originalAmount * discountRate / 100;
         long finalAmount = originalAmount - discountAmount;
+
+        //금액 계산 메서드 호출
+//        long price = tickets.getPrice();
+//        int discountRate = tickets.getDiscountRate() == null ? 0 : tickets.getDiscountRate();
+//
+//        long[] amounts = calculateAmounts(price, quantity, discountRate);
+//
+//        long originalAmount = amounts[0];
+//        long discountAmount = amounts[1];
+//        long finalAmount = amounts[2];
 
         //1인당 구매 제한 확인
         if (tickets.getPurchaseLimit() != null) {
@@ -81,6 +91,20 @@ public class OrderService {
         orderMapper.insertOrder(orders);
     }
 
+//    //금액 계산(테스트를 위해 따로 빼둠)
+//    static long[] calculateAmounts(long price, int quantity, int discountRate) {
+//
+//        long originalAmount = price * quantity;
+//        long discountAmount = originalAmount * discountRate / 100;
+//        long finalAmount = originalAmount - discountAmount;
+//
+//        return new long[] {
+//                originalAmount,
+//                discountAmount,
+//                finalAmount
+//        };
+//    }
+
     //주문 목록 조회
     public List<Orders> getMyOrders(Long userId) {
         return orderMapper.findByUserId(userId);
@@ -95,6 +119,8 @@ public class OrderService {
         }
         return orders;
     }
+
+     //record Amounts(long originalAmount, long discountAmount, long finalAmount) {}
 
     //주문 취소
     @Transactional
