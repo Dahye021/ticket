@@ -190,4 +190,69 @@ class OrderServiceTest {
         verify(orderMapper, never())
                 .insertOrder(any());
     }
+
+    //정상 취소 시 주문 상태 변경 + 재고 복구
+    @Test
+    void cancelOrderSuccess() {
+        Orders orders = new Orders();
+        orders.setOrderId(10L);
+        orders.setUserId(1L);
+        orders.setTicketId(1L);
+        orders.setQuantity(2);
+        orders.setOrderStatus("PURCHASED");
+
+        when(orderMapper.findByOrderId(10L, 1L))
+                .thenReturn(orders);
+        when(orderMapper.cancelOrder(10L,1L))
+                .thenReturn(1);
+        orderService.cancel(1L, 10L);
+
+        verify(orderMapper).cancelOrder(10L, 1L);
+        verify(ticketMapper).increaseStock(1L, 2);
+    }
+
+    // 주문이 없으면 취소 실패
+    @Test
+    void cancelOrderNotFound() {
+
+        when(orderMapper.findByOrderId(10L, 1L))
+                .thenReturn(null);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> orderService.cancel(1L, 10L)
+        );
+
+        verify(orderMapper, never())
+                .cancelOrder(anyLong(), anyLong());
+
+        verify(ticketMapper, never())
+                .increaseStock(anyLong(), anyInt());
+    }
+
+    // 이미 취소된 주문은 재고를 다시 복구하지 않음
+    @Test
+    void cancelAlreadyCanceledOrder() {
+
+        Orders orders = new Orders();
+        orders.setOrderId(10L);
+        orders.setUserId(1L);
+        orders.setTicketId(1L);
+        orders.setQuantity(2);
+        orders.setOrderStatus("CANCELED");
+
+        when(orderMapper.findByOrderId(10L, 1L))
+                .thenReturn(orders);
+
+        when(orderMapper.cancelOrder(10L, 1L))
+                .thenReturn(0);
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> orderService.cancel(1L, 10L)
+        );
+
+        verify(ticketMapper, never())
+                .increaseStock(anyLong(), anyInt());
+    }
 }
