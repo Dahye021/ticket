@@ -230,7 +230,7 @@ class OrderServiceTest {
                 .increaseStock(anyLong(), anyInt());
     }
 
-    // 이미 취소된 주문은 재고를 다시 복구하지 않음
+    // 이미 취소된 주문은 재고를 복구X
     @Test
     void cancelAlreadyCanceledOrder() {
 
@@ -255,4 +255,6 @@ class OrderServiceTest {
         verify(ticketMapper, never())
                 .increaseStock(anyLong(), anyInt());
     }
+
+
 }
